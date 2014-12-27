@@ -1,6 +1,6 @@
 [package]
 name: "termbox"
-version: "1.0"
+version: "1.1"
 author: "fowl"
 description: "Wrapper for Termbox, it beats the hell out of curses. (https://github.com/nsf/termbox)"
 license: "MIT"

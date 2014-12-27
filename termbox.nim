@@ -86,19 +86,20 @@ const
   TB_MOD_ALT* = 0x00000001
 # colors
 const
-  TB_BLACK* = 0x00000000
-  TB_RED* = 0x00000001
-  TB_GREEN* = 0x00000002
-  TB_YELLOW* = 0x00000003
-  TB_BLUE* = 0x00000004
-  TB_MAGENTA* = 0x00000005
-  TB_CYAN* = 0x00000006
-  TB_WHITE* = 0x00000007
-  TB_DEFAULT* = 0x0000000F
+  TB_DEFAULT* = 0x00000000
+  TB_BLACK* = 0x00000001
+  TB_RED* = 0x00000002
+  TB_GREEN* = 0x00000003
+  TB_YELLOW* = 0x00000004
+  TB_BLUE* = 0x00000005
+  TB_MAGENTA* = 0x00000006
+  TB_CYAN* = 0x00000007
+  TB_WHITE* = 0x00000008
 # attributes
 const
-  TB_BOLD* = 0x00000010
-  TB_UNDERLINE* = 0x00000020
+  TB_BOLD* = 0x00000100
+  TB_UNDERLINE* = 0x00000200
+  TB_REVERSE* = 0x00000400
 type
   tb_cell* {.pure, final.} = object
     ch*: uint32
@@ -130,27 +131,39 @@ else:
 
 proc init*(): cint
 proc shutdown*()
-proc width*(): cuint
-proc height*(): cuint
+proc width*(): cint
+proc height*(): cint
 proc clear*()
 proc present*()
 const
   TB_HIDE_CURSOR* = - 1
 proc set_cursor*(cx: cint; cy: cint)
-proc put_cell*(x: cuint; y: cuint; cell: ptr tb_cell)
-proc change_cell*(x: cuint; y: cuint; ch: uint32; fg: uint16;
+proc put_cell*(x: cint; y: cint; cell: ptr tb_cell)
+proc change_cell*(x: cint; y: cint; ch: uint32; fg: uint16;
                      bg: uint16)
-proc blit*(x: cuint; y: cuint; w: cuint; h: cuint; cells: ptr tb_cell)
+proc blit*(x: cint; y: cint; w: cint; h: cint; cells: ptr tb_cell)
+proc cell_buffer*: ptr tb_cell
+
 const
+  TB_INPUT_CURRENT* = 0
   TB_INPUT_ESC* = 1
   TB_INPUT_ALT* = 2
 # with 0 returns current input mode
 proc select_input_mode*(mode: cint): cint
+
+const
+  TB_OUTPUT_CURRENT* = 0
+  TB_OUTPUT_NORMAL* = 1
+  TB_OUTPUT_256* = 2
+  TB_OUTPUT_216* = 3
+  TB_OUTPUT_GRAYSCALE* = 4
+proc select_output_mode*(mode: cint): cint
+
 proc set_clear_attributes*(fg: uint16; bg: uint16)
 const
   TB_EVENT_KEY* = 1
   TB_EVENT_RESIZE* = 2
-proc peek_event*(event: ptr tb_event; timeout: cuint): cint
+proc peek_event*(event: ptr tb_event; timeout: cint): cint
 proc poll_event*(event: ptr tb_event): cint
 # these return:
 # 0 - no events, no errors,
